@@ -33,6 +33,9 @@ namespace AirLineWebCrawler
             AuthorName = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']//span[@itemprop='author']//span[@itemprop='name']")[index].InnerText;
             Date = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']//time[@itemprop='datePublished']")[index].InnerText;
             Content = row.SelectNodes("//div[@class='body']//div[@class='text_content ']")[index].InnerText;
+            string[] spArray = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']")[index].InnerText.Trim().Split(new String[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+            if (spArray.Length < 1)
+                Country = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']")[index].InnerText.Trim().Split(new String[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries)[1];
             int i = 0;
             HtmlNode rate = row.SelectNodes("//div[@class='body']//div[@class='tc_mobile']//table[@class='review-ratings']")[index];
             HtmlDocument htmlDocument = new HtmlDocument();
@@ -93,6 +96,7 @@ namespace AirLineWebCrawler
         public string Point { get; set; } = "NoData";
         public string Header { get; set; } = "NoData";
         public string AuthorName { get; set; } = "NoData";
+        public string Country { get; set; } = "NoData";
         public string Date { get; set; } = "NoData";
         public string Content { get; set; } = "NoData";
         public string Aircraft { get; set; } = "NoData";
@@ -108,6 +112,7 @@ namespace AirLineWebCrawler
         public string Recommended { get; set; }
         public string InflightEntertainment { get; set; } = "NoData";
         public string WifiConnectivity { get; set; } = "NoData";
+        
 
         public string AirLineName { get; set; }
     }

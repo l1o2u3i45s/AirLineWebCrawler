@@ -32,6 +32,9 @@ namespace AirLineWebCrawler
             Header = row.SelectNodes("//div[@class='body']//h2[@class='text_header']")[index].InnerText;
             AuthorName = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']//span[@itemprop='author']//span[@itemprop='name']")[index].InnerText;
             Date = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']//time[@itemprop='datePublished']")[index].InnerText;
+            string[] spArray = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']")[index].InnerText.Trim().Split(new String[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+            if (spArray.Length < 1)
+                Country = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']")[index].InnerText.Trim().Split(new String[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries)[1];
             Content = row.SelectNodes("//div[@class='body']//div[@class='text_content ']")[index].InnerText;
             int i = 0;
             HtmlNode rate = row.SelectNodes("//div[@class='body']//div[@class='tc_mobile']//table[@class='review-ratings']")[index];
@@ -92,6 +95,7 @@ namespace AirLineWebCrawler
         public string Point { get; set; }
         public string Header { get; set; }
         public string AuthorName { get; set; }
+        public string Country { get; set; } = "NoData";
         public string Date { get; set; }
         public string Content { get; set; }
         public string ExperienceAtAirport { get; set; }

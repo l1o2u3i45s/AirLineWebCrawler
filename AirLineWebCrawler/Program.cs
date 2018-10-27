@@ -25,6 +25,14 @@ namespace AirLineWebCrawler
         public static List<AirLineScore> AirLineScore = new List<AirLineScore>();
         static void Main(string[] args)
         {
+           GetAirPortList();
+           foreach (AirPort airPort in AirPortList)
+           {
+               GetEachAirPortScore(airPort.Name, airPort.Url);
+               GetEachAirPortReview(airPort.Name, airPort.Url);
+           }
+           ExportAirPortReviewToCsv();
+           ExportAirPortScoreToCsv();
 
             GetAirLineList();
            foreach (AirLine airLine in AirLineList)
@@ -33,20 +41,11 @@ namespace AirLineWebCrawler
               GetEachAirLineReview(airLine.Name, airLine.Url);
                GetEachAirLineSeat(airLine.Name, airLine.Url);
               GetEachAirLineLounge(airLine.Name, airLine.Url);
-            }
+           }
             ExportAirLineReviewToCsv();
-           ExportAirLineSeatToCsv();
-           ExportAirLineLoungeToCsv();
-           ExportAirLineScoreToCsv();
-
-
-        GetAirPortList();
-        foreach (AirPort airPort in AirPortList) { 
-            GetEachAirPortScore(airPort.Name, airPort.Url);
-            GetEachAirPortReview(airPort.Name, airPort.Url);
-        }
-        ExportAirPortReviewToCsv();
-        ExportAirPortScoreToCsv();
+            ExportAirLineSeatToCsv();
+            ExportAirLineLoungeToCsv();
+            ExportAirLineScoreToCsv();
         }
 
         public static void GetAirLineList()
@@ -170,11 +169,11 @@ namespace AirLineWebCrawler
         { 
              FileStream fs = new FileStream(System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "\\" + DateTime.Now.ToString("yyyy_MM_dd") + "AirPortReview.csv", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(@"Point" + "," + "AirPortName" + "," + "Header" + "," + "AuthorName" + "," + "Date" + "," + "Content" + "," + "ExperienceAtAirport" + "," + "DateVisit" + "," + "TypeOfTraveller" + "," +
+            sw.WriteLine(@"Point" + "," + "AirPortName" + "," + "Header" + "," + "AuthorName" + "," + "Country" +  "," + "Date" + "," + "Content" + "," + "ExperienceAtAirport" + "," + "DateVisit" + "," + "TypeOfTraveller" + "," +
                           "QueuingTimes" + "," + "TerminalCleanliness" + "," + "TerminalSeating" + "," + "TerminalSigns" + "," + "FoodBeverages" + "," + "AirportShopping" + ","
                           + "WifiConnectivity" + "," + "AirportStaff" + "," + "Recommended");
             foreach (AirPortReview review in AirPortReview) {
-                sw.WriteLine(review.Point + "," + review.AirPortName + "," + review.Header + "," + review.AuthorName + "," + review.Date + "," + review.Content.Replace(',', ' ')  + "," + review.ExperienceAtAirport + "," +
+                sw.WriteLine(review.Point + "," + review.AirPortName + "," + review.Header + "," + review.AuthorName + "," + review.Country + "," + review.Date + "," + review.Content.Replace(',', ' ')  + "," + review.ExperienceAtAirport + "," +
                     review.DateVisit + "," + review.TypeOfTraveller + "," + review.QueuingTimes + "," + review.TerminalCleanliness + "," + review.TerminalSeating + "," + review.TerminalSigns + "," +
                     review.FoodBeverages + "," + review.AirportShopping + "," + review.WifiConnectivity + "," + review.AirportStaff + "," + review.Recommended);  
             } 
@@ -186,12 +185,12 @@ namespace AirLineWebCrawler
         {
             FileStream fs = new FileStream(System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "\\" + DateTime.Now.ToString("yyyy_MM_dd") + "AirLineReview.csv", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(@"Point" + "," + "AirLineName" + "," + "Header" + "," + "AuthorName" + "," + "Date" + "," + "Content" + "," + "Aircraft" + "," + "TypeOfTraveller" + "," + "CabinFlown" + "," +
+            sw.WriteLine(@"Point" + "," + "AirLineName" + "," + "Header" + "," + "AuthorName" + "," + "Country" + "," + "Date" + "," + "Content" + "," + "Aircraft" + "," + "TypeOfTraveller" + "," + "CabinFlown" + "," +
                           "Route" + "," + "DateFlown" + "," + "SeatComfort" + "," + "CabinStaffService" + "," + "FoodBeverages" + "," + "GroundService" + ","
                           + "ValueForMoney" + "," + "InflightEntertainment" + "," + "WifiConnectivity" + "," + "Recommended");
             foreach (AirLineReview review in AirLineReview)
             {
-                sw.WriteLine(review.Point + "," + review.AirLineName + "," + review.Header + "," + review.AuthorName + "," + review.Date + "," + review.Content.Replace(',', ' ') + "," + review.Aircraft + "," +
+                sw.WriteLine(review.Point + "," + review.AirLineName + "," + review.Header + "," + review.AuthorName + "," + review.Country + "," + review.Date + "," + review.Content.Replace(',', ' ') + "," + review.Aircraft + "," +
                     review.TypeOfTraveller + "," + review.CabinFlown + "," + review.Route + "," + review.DateFlown + "," + review.SeatComfort + "," + review.CabinStaffService + "," +
                     review.FoodBeverages + "," + review.GroundService + "," + review.ValueForMoney + "," + review.InflightEntertainment + "," + review.WifiConnectivity + "," + review.Recommended);
             }
@@ -203,12 +202,12 @@ namespace AirLineWebCrawler
         {
             FileStream fs = new FileStream(System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "\\" + DateTime.Now.ToString("yyyy_MM_dd") + "AirLineSeat.csv", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(@"Point" + "," + "AirLineName" + "," + "Header" + "," + "AuthorName" + "," + "Date" + "," + "Content" + "," + "AircraftType" + "," + "SeatLayout" + "," + "DateFlown" + "," +
+            sw.WriteLine(@"Point" + "," + "AirLineName" + "," + "Header" + "," + "AuthorName" + "," + "Country" + "," + "Date" + "," + "Content" + "," + "AircraftType" + "," + "SeatLayout" + "," + "DateFlown" + "," +
                           "CabinFlown" + "," + "TypeOfTraveller" + "," + "SeatLegroom" + "," + "SeatRecline" + "," + "SeatWidth" + "," + "AisleSpace" + ","
                           + "ViewingTvScreen" + "," + "SeatStorage" +  "," + "Recommended");
             foreach (AirLineSeat review in AirLineSeat)
             {
-                sw.WriteLine(review.Point + "," + review.AirLineName + "," + review.Header + "," + review.AuthorName + "," + review.Date + "," + review.Content.Replace(',', ' ') + "," + review.AircraftType + "," +
+                sw.WriteLine(review.Point + "," + review.AirLineName + "," + review.Header + "," + review.AuthorName + "," + review.Country + "," + review.Date + "," + review.Content.Replace(',', ' ') + "," + review.AircraftType + "," +
                     review.SeatLayout + "," + review.DateFlown + "," + review.CabinFlown + "," + review.TypeOfTraveller + "," + review.SeatLegroom + "," + review.SeatRecline + "," +
                     review.SeatWidth + "," + review.AisleSpace + "," + review.ViewingTvScreen + "," + review.SeatStorage +  "," + review.Recommended);
             }
@@ -220,12 +219,12 @@ namespace AirLineWebCrawler
         {
             FileStream fs = new FileStream(System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "\\" + DateTime.Now.ToString("yyyy_MM_dd") + "AirLineLounge.csv", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(@"Point" + "," + "AirLineName" + "," + "Header" + "," + "AuthorName" + "," + "Date" + "," + "Content" + "," + "LoungeName" + "," + "Airport" + "," + "TypeOfLounge" + "," +
+            sw.WriteLine(@"Point" + "," + "AirLineName" + "," + "Header" + "," + "AuthorName" + "," + "Country" + "," + "Date" + "," + "Content" + "," + "LoungeName" + "," + "Airport" + "," + "TypeOfLounge" + "," +
                           "DateVisit" + "," + "TypeOfTraveller" + "," + "Comfort" + "," + "Cleanliness" + "," + "BarBeverages" + "," + "Catering" + ","
                           + "Washrooms" + "," + "WifiConnectivity" + "," + "StaffService" + "," + "Recommended");
             foreach (AirLineLounge review in AirLineLounge)
             {
-                sw.WriteLine(review.Point + "," + review.AirLineName + "," + review.Header + "," + review.AuthorName + "," + review.Date + "," + review.Content.Replace(',', ' ') + "," + review.LoungeName + "," +
+                sw.WriteLine(review.Point + "," + review.AirLineName + "," + review.Header + "," + review.AuthorName + "," + review.Country + "," + review.Date + "," + review.Content.Replace(',', ' ') + "," + review.LoungeName + "," +
                     review.Airport + "," + review.TypeOfLounge + "," + review.DateVisit + "," + review.TypeOfTraveller + "," + review.Comfort + "," + review.Cleanliness + "," +
                     review.BarBeverages + "," + review.Catering + "," + review.Washrooms + "," + review.WifiConnectivity + "," + review.StaffService + "," + review.Recommended);
             }
