@@ -34,7 +34,7 @@ namespace AirLineWebCrawler
             Date = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']//time[@itemprop='datePublished']")[index].InnerText;
             Content = row.SelectNodes("//div[@class='body']//div[@class='text_content ']")[index].InnerText;
             string[] spArray = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']")[index].InnerText.Trim().Split(new String[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
-            if (spArray.Length < 1)
+            if (spArray.Length > 1)
                 Country = row.SelectNodes("//div[@class='body']//h3[@class='text_sub_header userStatusWrapper']")[index].InnerText.Trim().Split(new String[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries)[1];
             int i = 0;
             HtmlNode rate = row.SelectNodes("//div[@class='body']//div[@class='tc_mobile']//table[@class='review-ratings']")[index];
