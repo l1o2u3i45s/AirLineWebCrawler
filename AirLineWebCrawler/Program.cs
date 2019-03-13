@@ -50,120 +50,148 @@ namespace AirLineWebCrawler
 
         public static void GetAirLineList()
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load("https://www.airlinequality.com/review-pages/a-z-airline-reviews/");
-            Console.WriteLine("Get All AirLine List");
-            int i = 0;
-            foreach (HtmlNode row in doc.DocumentNode.SelectNodes("//div[@class='a_z_col_group']//ul[@class='items']//li"))
+            try
             {
-                AirLine airLine = new AirLine(row.InnerHtml);
-                AirLineList.Add(airLine);
-                Console.WriteLine(airLine.Name + "   Get Url:" + airLine.Url);
-                i++;
+                HtmlWeb web = new HtmlWeb();
+                HtmlDocument doc = web.Load("https://www.airlinequality.com/review-pages/a-z-airline-reviews/");
+                Console.WriteLine("Get All AirLine List");
+                int i = 0;
+                foreach (HtmlNode row in doc.DocumentNode.SelectNodes("//div[@class='a_z_col_group']//ul[@class='items']//li"))
+                {
+                    AirLine airLine = new AirLine(row.InnerHtml);
+                    AirLineList.Add(airLine);
+                    Console.WriteLine(airLine.Name + "   Get Url:" + airLine.Url);
+                    i++;
+                }
             }
+            catch (Exception ex) { }
         }
         public static void GetAirPortList()
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load("https://www.airlinequality.com/review-pages/a-z-airport-reviews/");
-            Console.WriteLine("Get All AirPort List");
-            int i = 0;
-            foreach (HtmlNode row in doc.DocumentNode.SelectNodes("//div[@class='a_z_col_group']//ul[@class='items']//li"))
+            try
             {
-                AirPort airPort = new AirPort(row.InnerHtml);
-                AirPortList.Add(airPort);
-                Console.WriteLine(airPort.Name + "   Get Url:" + airPort.Url);
-                i++;
+                HtmlWeb web = new HtmlWeb();
+                HtmlDocument doc = web.Load("https://www.airlinequality.com/review-pages/a-z-airport-reviews/");
+                Console.WriteLine("Get All AirPort List");
+                int i = 0;
+                foreach (HtmlNode row in doc.DocumentNode.SelectNodes("//div[@class='a_z_col_group']//ul[@class='items']//li"))
+                {
+                    AirPort airPort = new AirPort(row.InnerHtml);
+                    AirPortList.Add(airPort);
+                    Console.WriteLine(airPort.Name + "   Get Url:" + airPort.Url);
+                    i++;
+                }
             }
+            catch (Exception ex) { }
+
         }
 
         public static void GetEachAirPortReview(string airPortName,string airPortUrl) {
-           
-            HtmlWeb web = new HtmlWeb();
-            int index = 0;
-            string url = "https://www.airlinequality.com/airport-reviews/" + airPortUrl.Trim().Replace(' ','-') + "/?sortby=post_date%3ADesc&pagesize=10000";
-            HtmlDocument doc = web.Load(url); 
-            Console.WriteLine("Visit Url:" + url);
-            foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
+
+            try
             {
-                AirPortReview review = new AirPortReview(data,index, airPortName.Trim());
-                AirPortReview.Add(review); 
-               index++;
+                HtmlWeb web = new HtmlWeb();
+                int index = 0;
+                string url = "https://www.airlinequality.com/airport-reviews/" + airPortUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
+                HtmlDocument doc = web.Load(url);
+                Console.WriteLine("Visit Url:" + url);
+                foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
+                {
+                    AirPortReview review = new AirPortReview(data, index, airPortName.Trim());
+                    AirPortReview.Add(review);
+                    index++;
+                }
+                Console.WriteLine("Get " + airPortName + " Data");
             }
-            Console.WriteLine("Get " + airPortName + " Data"); 
+            catch (Exception ex) { } 
         }
         public static void GetEachAirLineReview(string airLineName, string airLineUrl)
         {
-            HtmlWeb web = new HtmlWeb();
-            int index = 0;
-            string url = "https://www.airlinequality.com/airline-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=100000";
-            HtmlDocument doc = web.Load(url);
-            Console.WriteLine("Visit Url:" + url);
-            foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
-            {
-                AirLineReview review = new AirLineReview(data, index, airLineName.Trim());
-                AirLineReview.Add(review);
-                index++;
+            try {
+                HtmlWeb web = new HtmlWeb();
+                int index = 0;
+                string url = "https://www.airlinequality.com/airline-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=100000";
+                HtmlDocument doc = web.Load(url);
+                Console.WriteLine("Visit Url:" + url);
+                foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
+                {
+                    AirLineReview review = new AirLineReview(data, index, airLineName.Trim());
+                    AirLineReview.Add(review);
+                    index++;
+                }
+                Console.WriteLine("Get " + airLineName + " Data");
             }
-            Console.WriteLine("Get " + airLineName + " Data");
+            catch (Exception ex) { }
         }
         public static void GetEachAirLineSeat(string airLineName, string airLineUrl)
         {
-            HtmlWeb web = new HtmlWeb();
-            int index = 0;
-            string url = "https://www.airlinequality.com/seat-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
-            HtmlDocument doc = web.Load(url);
-            Console.WriteLine("Visit Url:" + url);
-            if (doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']") is null)
-                return;
-            foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
-            {
-                AirLineSeat review = new AirLineSeat(data, index, airLineName.Trim());
-                AirLineSeat.Add(review);
-                index++;
+            try {
+                HtmlWeb web = new HtmlWeb();
+                int index = 0;
+                string url = "https://www.airlinequality.com/seat-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
+                HtmlDocument doc = web.Load(url);
+                Console.WriteLine("Visit Url:" + url);
+                if (doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']") is null)
+                    return;
+                foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
+                {
+                    AirLineSeat review = new AirLineSeat(data, index, airLineName.Trim());
+                    AirLineSeat.Add(review);
+                    index++;
+                }
+                Console.WriteLine("Get " + airLineName + " Data");
             }
-            Console.WriteLine("Get " + airLineName + " Data");
+            catch (Exception ex) { }
         }
         public static void GetEachAirLineLounge(string airLineName, string airLineUrl)
         {
-            HtmlWeb web = new HtmlWeb();
-            int index = 0;
-            string url = "https://www.airlinequality.com/lounge-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
-            HtmlDocument doc = web.Load(url);
-            Console.WriteLine("Visit Url:" + url);
-            if (doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']") is null)
-                return;
-            foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
-            {
-                AirLineLounge review = new AirLineLounge(data, index, airLineName.Trim());
-                AirLineLounge.Add(review);
-                index++;
+            try {
+                HtmlWeb web = new HtmlWeb();
+                int index = 0;
+                string url = "https://www.airlinequality.com/lounge-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
+                HtmlDocument doc = web.Load(url);
+                Console.WriteLine("Visit Url:" + url);
+                if (doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']") is null)
+                    return;
+                foreach (HtmlNode data in doc.DocumentNode.SelectNodes("//article[@class='comp comp_reviews-airline querylist position-content  ']//article[@itemprop='review']"))
+                {
+                    AirLineLounge review = new AirLineLounge(data, index, airLineName.Trim());
+                    AirLineLounge.Add(review);
+                    index++;
+                }
+                Console.WriteLine("Get " + airLineName + " Data");
             }
-            Console.WriteLine("Get " + airLineName + " Data");
+            catch (Exception ex) { }
         }
         public static void GetEachAirLineScore(string airLineName, string airLineUrl)
         {
-            HtmlWeb web = new HtmlWeb();
-            string url = "https://www.airlinequality.com/airline-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
-            HtmlDocument doc = web.Load(url);
-            Console.WriteLine("Visit Url:" + url);
-            if (doc.DocumentNode.SelectNodes("//div[@class='review-info']") is null)
-                return;
-            AirLineScore review = new AirLineScore(doc.DocumentNode.SelectSingleNode("//div[@class='customer-rating']"), airLineName.Trim());
-            AirLineScore.Add(review);
-            Console.WriteLine("Get " + airLineName + " Data");
+            try {
+                HtmlWeb web = new HtmlWeb();
+                string url = "https://www.airlinequality.com/airline-reviews/" + airLineUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
+                HtmlDocument doc = web.Load(url);
+                Console.WriteLine("Visit Url:" + url);
+                if (doc.DocumentNode.SelectNodes("//div[@class='review-info']") is null)
+                    return;
+                AirLineScore review = new AirLineScore(doc.DocumentNode.SelectSingleNode("//div[@class='customer-rating']"), airLineName.Trim());
+                AirLineScore.Add(review);
+                Console.WriteLine("Get " + airLineName + " Data");
+            }
+            catch (Exception ex) { }
         }
         public static void GetEachAirPortScore(string airPortName, string airPortUrl)
         {
-            HtmlWeb web = new HtmlWeb();
-            string url = "https://www.airlinequality.com/airport-reviews/" + airPortUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
-            HtmlDocument doc = web.Load(url);
-            Console.WriteLine("Visit Url:" + url);
-            if (doc.DocumentNode.SelectNodes("//div[@class='review-info']") is null)
-                return;
-            AirPortScore review = new AirPortScore(doc.DocumentNode.SelectSingleNode("//div[@class='customer-rating']"), airPortName.Trim());
-            AirPortScore.Add(review);
-            Console.WriteLine("Get " + airPortName + " Data");
+            try {
+                HtmlWeb web = new HtmlWeb();
+                string url = "https://www.airlinequality.com/airport-reviews/" + airPortUrl.Trim().Replace(' ', '-') + "/?sortby=post_date%3ADesc&pagesize=10000";
+                HtmlDocument doc = web.Load(url);
+                Console.WriteLine("Visit Url:" + url);
+                if (doc.DocumentNode.SelectNodes("//div[@class='review-info']") is null)
+                    return;
+                AirPortScore review = new AirPortScore(doc.DocumentNode.SelectSingleNode("//div[@class='customer-rating']"), airPortName.Trim());
+                AirPortScore.Add(review);
+                Console.WriteLine("Get " + airPortName + " Data");
+            }
+            catch (Exception ex) { }
         }
         public static void ExportAirPortReviewToCsv()
         { 
